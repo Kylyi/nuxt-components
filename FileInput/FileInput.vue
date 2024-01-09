@@ -88,7 +88,13 @@ onChange(handleAdd)
     <div
       ref="fileInputWrapperEl"
       class="file-input-wrapper"
-      :class="wrapperClass"
+      :class="[
+        wrapperClass,
+        props.innerWrapperClass,
+        {
+          'no-border': props.noBorder,
+        },
+      ]"
       @click.stop.prevent="handleOpen"
     >
       <FilePreview
@@ -104,6 +110,7 @@ onChange(handleAdd)
       <div
         v-if="!model?.length"
         class="file-input-wrapper-hint"
+        :class="props.hintClass"
       >
         <div
           ic:sharp-cloud-upload
@@ -123,15 +130,16 @@ onChange(handleAdd)
 
 <style scoped lang="scss">
 .file-input-wrapper {
-  --apply: grid gap-2 border-2 border-dashed p-2 rounded-3 relative min-h-35 overflow-auto;
-  --apply: dark:border-true-gray-600/50 border-true-gray-300/80;
+  --apply: grid gap-2 p-2 rounded-3 relative min-h-35 overflow-auto;
   --apply: dark:bg-darker bg-white;
 
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
 
   &.is-dragger-over,
   &:hover {
-    --apply: dark:border-true-gray-600 border-true-gray-300;
+    :not(.no-border){
+      --apply: dark:border-true-gray-600 border-true-gray-300;
+    }
 
     .file-input-wrapper-hint {
       --apply: color-darker dark:color-light-800;
@@ -145,6 +153,10 @@ onChange(handleAdd)
 
   &:not(.is-readonly) {
     --apply: cursor-pointer;
+  }
+
+  &:not(.no-border){
+    --apply: border-2 border-dashed dark:border-true-gray-600/50 border-true-gray-300/80;
   }
 }
 </style>
