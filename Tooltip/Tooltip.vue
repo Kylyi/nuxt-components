@@ -43,7 +43,7 @@ function getTargetElement(target: any): any {
 const instance = getCurrentInstance()
 
 // Layout
-const model = defineModel({ default: false, local: true })
+const model = defineModel({ default: false })
 const tooltipEl = ref<HTMLElement>()
 const referenceEl = ref<Element>() // Element that menu is attached to
 const arrowEl = ref<HTMLDivElement>()

@@ -45,7 +45,7 @@ const { errorsExtended, handleDismissError } = useFormErrors(errors, emits)
 const formEl = ref<HTMLFormElement>()
 const menuConfirmationEl = ref<InstanceType<typeof MenuConfirmation>>()
 const isSubmitted = ref(false)
-const isEditing = defineModel('isEditing', { default: false, local: true })
+const isEditing = defineModel('isEditing', { default: false })
 const { isDesktop } = useDevice()
 
 provide(isFormEditingKey, isEditing)

@@ -132,7 +132,7 @@ async function handleAnimation() {
 
   // Reset transform origin
   dialogEl.value?.classList.forEach(
-    c => c.startsWith('origin-') && dialogEl.value?.classList.remove(c)
+    (c: any) => c.startsWith('origin-') && dialogEl.value?.classList.remove(c)
   )
 
   // Set transform origin
