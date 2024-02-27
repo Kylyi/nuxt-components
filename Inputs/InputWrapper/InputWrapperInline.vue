@@ -175,6 +175,11 @@ const classes = computed(() => {
   --apply: transition-all border-custom rounded-custom pointer-events-none
     border-ca fit;
 }
+
+.input-wrapper__inline:not(.has-border) .input-wrapper__inline-border {
+  --apply: border-none;
+}
+
 .input-wrapper__inline:focus-within {
   .input-wrapper__inline-border {
     --apply: border-$borderColor;

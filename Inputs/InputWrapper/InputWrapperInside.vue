@@ -165,6 +165,10 @@ const classes = computed(() => {
     pointer-events-none border-ca;
 }
 
+.input-wrapper__inside:not(.has-border) .input-wrapper__inside-border {
+  --apply: border-none;
+}
+
 .input-wrapper__inside:focus-within {
   .input-wrapper__inside-border {
     --apply: border-$borderColor;

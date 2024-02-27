@@ -70,7 +70,6 @@ const contentClass = computed(() => {
     'is-disabled': props.disabled,
     'has-error': !!issues.value.length,
     'has-label': !!props.label,
-    'has-border': !props.noBorder,
     'is-modified': isModified.value,
   }
 })

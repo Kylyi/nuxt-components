@@ -155,7 +155,12 @@ const classes = computed(() => {
   --apply: fit transition-all border-custom rounded-custom pointer-events-none
     border-ca;
 }
-// With border
+
+.input-wrapper__regular:not(.has-border) .input-wrapper__regular-border {
+  --apply: border-none;
+}
+
+// With label
 .input-wrapper__regular.has-label > .input-wrapper__regular-border {
   grid-row: 2 / 3;
 }
