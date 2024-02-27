@@ -73,7 +73,7 @@ div.label {
     --apply: font-rem-14 leading-3.5;
 
     &.is-inside {
-      --apply: translate-y-15px;
+      --apply: translate-y-13px;
     }
 
     &.is-regular {
@@ -86,7 +86,7 @@ div.label {
     --apply: leading-4;
 
     &.is-inside {
-      --apply: translate-y-4;
+      --apply: translate-y-14px;
     }
 
     &.is-regular {
@@ -99,7 +99,7 @@ div.label {
     --apply: font-rem-16 leading-5;
 
     &.is-inside {
-      --apply: translate-y-4.5;
+      --apply: translate-y-17px;
     }
 
     &.is-regular {

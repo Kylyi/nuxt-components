@@ -194,11 +194,11 @@ const classes = computed(() => {
   }
 
   &.is-md > .input-wrapper__inside-input {
-    --apply: min-h-48px;
+    --apply: min-h-44px;
   }
 
   &.is-lg > .input-wrapper__inside-input {
-    --apply: min-h-56px;
+    --apply: min-h-48px;
   }
 }
 

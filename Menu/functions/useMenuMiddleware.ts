@@ -21,7 +21,7 @@ export function useMenuMiddleware(
       ...(props.fit ? [fitWidth] : []),
       ...(props.matchWidth ? [matchWidth] : []),
       ...(props.cover ? [cover] : []),
-      shift({ padding: 8 }),
+      shift({ padding: 0 }),
       flip({ fallbackPlacements: props.fallbackPlacements }),
       size({
         apply: ({ availableHeight, availableWidth, elements }) => {

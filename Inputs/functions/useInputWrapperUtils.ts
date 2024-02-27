@@ -48,18 +48,18 @@ export function useInputWrapperUtils() {
     if (props.size === 'sm') {
       styleVariables['--fontSize'] = '14px'
       styleVariables['--lineHeight'] = '24px'
-      styleVariables['--padding'] = preferMargin ? '0 12px' : '4px 12px'
+      styleVariables['--padding'] = preferMargin ? '0 12px' : '0px 12px'
       styleVariables['--margin'] = preferMargin ? '4px 0' : '0'
 
       if (isLabelInside) {
-        styleVariables['--padding'] = preferMargin ? '0 12px' : '16px 12px 4px'
-        styleVariables['--margin'] = preferMargin ? '16px 0 4px' : '0'
+        styleVariables['--padding'] = preferMargin ? '0 12px' : '14px 12px 2px'
+        styleVariables['--margin'] = preferMargin ? '14px 0 2px' : '0'
 
         if (!hasLabel) {
           if (preferMargin) {
-            styleVariables['--margin'] = '10px 0'
+            styleVariables['--margin'] = '8px 0'
           } else {
-            styleVariables['--padding'] = '10px 12px'
+            styleVariables['--padding'] = '8px 12px'
           }
         }
       }
@@ -86,14 +86,14 @@ export function useInputWrapperUtils() {
       styleVariables['--margin'] = preferMargin ? '7px 0' : '0'
 
       if (isLabelInside) {
-        styleVariables['--padding'] = preferMargin ? '0 12px' : '19px 12px 3px'
-        styleVariables['--margin'] = preferMargin ? '19px 0 3px' : '0'
+        styleVariables['--padding'] = preferMargin ? '0 12px' : '16px 12px 2px'
+        styleVariables['--margin'] = preferMargin ? '16px 0 2px' : '0'
 
         if (!hasLabel) {
           if (preferMargin) {
-            styleVariables['--margin'] = '11px 0'
+            styleVariables['--margin'] = '9px 0'
           } else {
-            styleVariables['--padding'] = '11px 12px'
+            styleVariables['--padding'] = '9px 12px'
           }
         }
       }
