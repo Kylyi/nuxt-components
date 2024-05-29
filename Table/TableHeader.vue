@@ -171,7 +171,7 @@ defineExpose({
 <style lang="scss" scoped>
 .thead {
   --apply: flex shrink-0 relative
-    bg-white dark:bg-darker min-h-$headerHeight;
+    bg-$Table-header-bg min-h-$headerHeight;
 }
 .splitter {
   --apply: absolute top-0 bottom-0 w-7px z-5;
