@@ -74,7 +74,7 @@ function getLabel(breadcrumb: IBreadcrumb) {
   --apply: flex grow flex-gap-x-1 items-center text-sm m-t-2 m-b-1 overflow-auto;
 
   &-wrapper {
-    --apply: flex flex-gap-x-1 items-center md:p-x-3;
+    --apply: flex flex-gap-x-1 items-center md:p-$breadcrumbs-padding;
     --apply: bg-$Breadcrumbs-bg;
   }
 }
