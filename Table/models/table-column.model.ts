@@ -517,10 +517,8 @@ export class TableColumn<T = IItem> implements IItemBase<T> {
     // Filtering
     this.filters = col.filters ? col.filters : []
     this.filterComponent = col.filterComponent
-    // @ts-expect-error - defaultComparators aren't supported for all dataTypes
-    this.comparators = col.comparators ?? defaultComparatorsByDataType[this.dataType]
-    // @ts-expect-error - defaultComparators aren't supported for all dataTypes
-    this.comparator = col.comparator ?? defaultComparatorByDataType[this.dataType] ?? this.comparator
+    this.comparators = col.comparators ?? config.dataTypes.comparators[this.dataType]
+    this.comparator = col.comparator ?? config.dataTypes.defaultComparator[this.dataType] ?? this.comparator
     this.extraComparators = col.extraComparators
     this.noFilterSort = col.noFilterSort ?? false
     this.filterFormat = col.filterFormat
