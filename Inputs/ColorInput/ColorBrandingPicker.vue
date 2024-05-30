@@ -6,9 +6,10 @@ import type { ISelectorProps } from '~/components/Selector/types/selector-props.
 
 type IProps = {
   modelValue?: string
+  rgba?: boolean
 }
 
-defineProps<IProps>()
+const props = defineProps<IProps>()
 const emits = defineEmits<{
   (e: 'update:modelValue', val: string | undefined): void
 }>()
@@ -86,13 +87,25 @@ const opacity = computed({
 })
 
 watch(sRGBHex, value => {
-  if (value) {
+  if (value && props.rgba) {
     model.value = hexToRgb(value)
   }
 })
 
 // Methods
 function setColor(color: string, isThemeColor = false) {
+  if (!props.rgba) {
+    if (isThemeColor) {
+    model.value = getColor(color, undefined, true)
+
+    return
+  }
+
+    model.value = color
+
+    return
+  }
+
   if (isThemeColor) {
     model.value = getColor(color)
 
@@ -191,7 +204,7 @@ function setColor(color: string, isThemeColor = false) {
 
     <!-- Customize color -->
     <div
-      v-if="typeof opacity === 'number'"
+      v-if="typeof opacity === 'number' && rgba"
       flex="~ gap-2"
     >
       <RangeInput

@@ -17,7 +17,11 @@ export default {
     const providedData = inject<IItem>('providedData')
     const removeElement = inject<Function>('removeElement')
     const syncFilesHTML = inject<Function>('syncFilesHTML')
+
+    // Files provided through the Wysiwyg component
     const injectedFiles = inject(filesByFilepathKey, ref({}))
+
+    // New files uploaded through and grouped by the `uuid`
     const componentData = providedData?.[uuid]
 
     const files = computed(() => {
@@ -30,7 +34,10 @@ export default {
         .map(id => injectedFiles.value?.[id])
         .filter(Boolean) as IFile[]
 
-      return [...(componentData?.files?.filter(Boolean) ?? []), ...uploadedFiles]
+      return [
+        ...(componentData?.files?.filter(Boolean) ?? []),
+        ...uploadedFiles
+      ] as Array<IFile | FileModel>
     })
 
     function handleRemoveElement(idx: number) {
@@ -40,8 +47,7 @@ export default {
         return
       }
 
-      componentData!.files = files.value
-        ?.filter((_: FileModel, i: number) => i !== idx)
+      componentData!.files = files.value?.filter((_, i: number) => i !== idx)
 
       file.delete(handleRequest)
 
@@ -51,19 +57,24 @@ export default {
 
     }
 
+    // When this component is mounted (~ an image is inserted into the Wysiwyg editor, upload the files)
     onMounted(() => {
       nextTick(() => {
-        files.value.forEach(
-          (file: FileModel) => file.upload?.(handleRequest).then(() => syncFilesHTML?.())
-        )
+        files.value.forEach(file => {
+          if ('id' in file) {
+            return
+          }
+
+          file.upload?.(handleRequest).then(() => syncFilesHTML?.())
+        })
       })
     })
 
     syncRef(files, deepFiles, { direction: 'both', deep: true })
 
-    onBeforeUnmount(() => {
-      files.value.forEach((file: FileModel) => file.delete(handleRequest))
-    })
+    // onBeforeUnmount(() => {
+    //   files.value.forEach((file: FileModel) => file.delete(handleRequest))
+    // })
 
     return {
       files,
@@ -82,7 +93,7 @@ export default {
       :key="idx"
       :file="file"
       data-drag-handle
-      editable
+      :editable="!('id' in file)"
       @remove="handleRemoveElement(idx)"
     />
   </NodeViewWrapper>

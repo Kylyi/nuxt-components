@@ -33,12 +33,17 @@ const formattedOriginalValue = computed(() => {
     resolveEnums: props.resolveEnums,
   })
 })
+
+const isEmptyValue = computed(() => {
+  return isNil(formattedValue)
+    || formattedValue.value === props.emptyValue
+})
 </script>
 
 <template>
   <slot :val="formattedValue">
     <span v-bind="$attrs">
-      {{ isNil(formattedValue) ? emptyValueString : formattedValue }}
+      {{ isEmptyValue ? emptyValueString : formattedValue }}
     </span>
   </slot>
 

@@ -86,6 +86,7 @@ function handleClick() {
       h="4"
       w="4"
       self-center
+      shrink-0
       tabindex="-1"
       :rounded="false"
       class="rounded"

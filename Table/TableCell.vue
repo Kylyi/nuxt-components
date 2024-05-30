@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// Types
+import type { ITableProps } from '~/components/Table/types/table-props.type';
+
 // Models
 import { TableColumn } from '~/components/Table/models/table-column.model'
 
@@ -13,6 +16,7 @@ type IProps = {
   column: TableColumn
   editable?: boolean
   row: any
+  selectionOptions?: ITableProps['selectionOptions']
 }
 
 const props = defineProps<IProps>()
@@ -275,6 +279,16 @@ function selectSelf(self: any) {
     self.component?.exposed?.select?.() ?? self.component?.exposed?.focus?.()
   })
 }
+
+function isSelectDisabled() {
+  if (!props.selectionOptions) {
+    return true
+  }
+
+  return typeof props.selectionOptions.disabled === 'function'
+    ? props.selectionOptions.disabled(props.row)
+    : props.selectionOptions.disabled
+}
 </script>
 
 <template>
@@ -304,6 +318,7 @@ function selectSelf(self: any) {
       <Checkbox
         :model-value="isSelectedRow(row)"
         name="select-row"
+        :editable="!isSelectDisabled()"
         @update:model-value="handleSelectRow(row)"
       />
     </div>

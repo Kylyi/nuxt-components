@@ -128,7 +128,13 @@ export async function useTableMetaData(props: ITableProps) {
             : await fnc?.()
         }
 
-        tableStore.setTableState(getStorageKey(), { meta: result })
+        tableStore.setTableState(
+          getStorageKey(),
+          {
+            meta: result,
+            pageSize: stateMetaData.value.pageSize ??props.paginationOptions?.pageSize
+          }
+        )
 
         const _layout = get(
           result,
@@ -142,7 +148,7 @@ export async function useTableMetaData(props: ITableProps) {
         layout.value =
           _layout && !localStorageLayoutSchema
             ? { ..._layout, preventLayoutReset: true }
-            : undefined
+            : localStorageLayoutSchema ? { schema: localStorageLayoutSchema } : undefined
 
         // Project specific
         if (_layout?.viewCode) {
@@ -216,7 +222,7 @@ export async function useTableMetaData(props: ITableProps) {
 
             // We extend the column with the data from the API when found
             if (foundColumn) {
-              foundColumn.setDataType(col.type)
+              foundColumn.setDataType(col.type, foundColumn.comparator)
 
               EXTENDABLE_COLUMN_PROPERTIES.forEach(prop => {
                 if (col[prop] !== undefined) {
@@ -248,7 +254,7 @@ export async function useTableMetaData(props: ITableProps) {
             )
 
             if (foundColumn) {
-              col.setDataType(foundColumn.type)
+              col.setDataType(foundColumn.type, foundColumn.comparator)
             }
 
             return col

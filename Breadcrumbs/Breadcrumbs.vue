@@ -35,7 +35,7 @@ function getLabel(breadcrumb: IBreadcrumb) {
       <HorizontalScroller content-class="flex items-center">
         <template
           v-for="(breadcrumb, idx) in breadcrumbs"
-          :key="`${breadcrumb.to}-${idx}`"
+          :key="idx"
         >
           <!-- Chevron -->
           <span

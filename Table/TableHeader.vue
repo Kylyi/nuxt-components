@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// Types
+import type { ITableProps } from '~/components/Table/types/table-props.type';
+
 // Models
 import { TableColumn } from '~/components/Table/models/table-column.model'
 
@@ -23,6 +26,7 @@ type IProps = {
   noLock?: boolean
   rows: any[]
   smallScreen?: boolean
+  selectionOptions?: ITableProps['selectionOptions']
 }
 
 const props = defineProps<IProps>()

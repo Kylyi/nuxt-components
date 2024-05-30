@@ -55,6 +55,7 @@ const isEditable = computedEager(() => {
         :column="col"
         :row="row"
         :editable="isEditable"
+        :selection-options="selectionOptions"
       >
         <slot
           :name="col.name"

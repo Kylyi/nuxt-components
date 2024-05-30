@@ -8,9 +8,9 @@ import { useListUtils } from '~/components/List/functions/useListUtils'
 import {
   listContainerKey,
   listDraggedItemKey,
-  listItemsKey,
   listEmitDragEndEventKey,
-  listEmitDragStartEventKey
+  listEmitDragStartEventKey,
+  listItemsKey,
 } from '~/components/List/provide/list.provide'
 
 // Constants
@@ -27,21 +27,21 @@ export function useListItemDragAndDrop(itemRef: MaybeRefOrGetter<IListItem>) {
   const emitDragEndEvent = injectStrict(listEmitDragEndEventKey)
 
   // Scrolling
-useScroll(scrollContainer, {
-  onScroll: updateDropIndicator
-})
-const scrollBy = ref({ speedX: 0, speedY: 0 })
+  useScroll(scrollContainer, {
+    onScroll: updateDropIndicator,
+  })
+  const scrollBy = ref({ speedX: 0, speedY: 0 })
 
-const { pause, resume, isActive } = useIntervalFn(
-  () => {
-    const { speedX, speedY } = scrollBy.value
-    scrollContainer.value?.scrollBy(speedX, speedY)
+  const { pause, resume, isActive } = useIntervalFn(
+    () => {
+      const { speedX, speedY } = scrollBy.value
+      scrollContainer.value?.scrollBy(speedX, speedY)
 
-    updateDropIndicator()
-  },
-  5,
-  { immediate: false }
-)
+      updateDropIndicator()
+    },
+    5,
+    { immediate: false },
+  )
 
   function updateDropIndicator() {
     if (!lastEv) {
@@ -58,7 +58,7 @@ const { pause, resume, isActive } = useIntervalFn(
     }
   }
 
-    // D'n'D
+  // D'n'D
   const draggableEl = ref<HTMLElement>()
   let clonedElement: HTMLElement | null = null
   let mouseOffset = { x: 0, y: 0 }
@@ -68,9 +68,9 @@ const { pause, resume, isActive } = useIntervalFn(
   // Mouse
   function handleMouseDown(event: MouseEvent) {
     const target = event.target as HTMLElement
-    const isDraggableEl =
-      target.classList.contains('list-move-handler') ||
-      target.classList.contains('list-move-handler__icon')
+    const isDraggableEl
+      = target.classList.contains('list-move-handler')
+      || target.classList.contains('list-move-handler__icon')
 
     if (!isDraggableEl) {
       return
@@ -101,7 +101,7 @@ const { pause, resume, isActive } = useIntervalFn(
       // Constrain to viewport
       newLeft = Math.min(
         newLeft,
-        window.innerWidth - clonedElement.offsetWidth - ITEM_ROW_LEFT_MARGIN
+        window.innerWidth - clonedElement.offsetWidth - ITEM_ROW_LEFT_MARGIN,
       )
       newTop = Math.min(newTop, window.innerHeight - clonedElement.offsetHeight)
       newLeft = Math.max(newLeft, 0)
@@ -123,9 +123,9 @@ const { pause, resume, isActive } = useIntervalFn(
   // Touch
   function handleTouchStart(event: TouchEvent) {
     const target = event.target as HTMLElement
-    const isDraggableEl =
-      target.classList.contains('list-move-handler') ||
-      target.classList.contains('list-move-handler__icon')
+    const isDraggableEl
+      = target.classList.contains('list-move-handler')
+      || target.classList.contains('list-move-handler__icon')
 
     if (!isDraggableEl) {
       return
@@ -156,7 +156,7 @@ const { pause, resume, isActive } = useIntervalFn(
       // Constrain to viewport
       newLeft = Math.min(
         newLeft,
-        window.innerWidth - clonedElement.offsetWidth - ITEM_ROW_LEFT_MARGIN
+        window.innerWidth - clonedElement.offsetWidth - ITEM_ROW_LEFT_MARGIN,
       )
       newTop = Math.min(newTop, window.innerHeight - clonedElement.offsetHeight)
       newLeft = Math.max(newLeft, 0)

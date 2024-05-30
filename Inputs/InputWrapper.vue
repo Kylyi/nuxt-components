@@ -78,9 +78,7 @@ const contentClass = computed(() => {
   }
 })
 
-const wrapperStyleVariables = computed(() =>
-  getInputWrapperStyleVariables(props)
-)
+const wrapperStyleVariables = computed(() => getInputWrapperStyleVariables(props))
 
 const isInputRequired = computed(() => {
   if (!isNil(props.required)) {
@@ -204,7 +202,7 @@ const wrapperProps = computed(() => {
 
 <style lang="scss" scoped>
 .wrapper {
-  --apply: relative flex flex-col rounded-custom;
+  --apply: relative flex flex-col rounded-$borderRadius;
 
   .wrapper__body {
     --apply: relative;
@@ -222,7 +220,7 @@ const wrapperProps = computed(() => {
     }
 
     :slotted(.control) {
-      --apply: bg-inherit outline-none rounded-custom w-full;
+      --apply: bg-inherit outline-none rounded-$borderRadius w-full;
 
       font-size: var(--fontSize);
       line-height: var(--lineHeight);

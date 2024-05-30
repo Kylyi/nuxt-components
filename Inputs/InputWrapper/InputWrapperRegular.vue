@@ -74,7 +74,7 @@ const classes = computed(() => {
 
 <style lang="scss" scoped>
 .input-wrapper__regular {
-  --apply: grid items-center rounded-custom;
+  --apply: grid items-center rounded-$borderRadius;
 
   // Without label
   grid-template-areas:
@@ -132,7 +132,7 @@ const classes = computed(() => {
   grid-row: 1 / 2;
   transition: border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
-  --apply: fit border-custom rounded-custom pointer-events-none border-ca
+  --apply: fit border-custom rounded-$borderRadius pointer-events-none border-ca
     bg-$Input-wrapper-bg;
 }
 

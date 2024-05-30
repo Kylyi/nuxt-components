@@ -1,4 +1,5 @@
 // Types
+import { config } from '~/components/config/components-config'
 import type { IInputWrapperProps } from '~/components/Inputs/types/input-wrapper-props.type'
 
 export function useInputWrapperUtils() {
@@ -22,7 +23,7 @@ export function useInputWrapperUtils() {
       'noBorder',
       'validation',
       'ui',
-      'zod'
+      'zod',
     )
   }
 
@@ -35,6 +36,7 @@ export function useInputWrapperUtils() {
       '--margin': '',
       '--bodyMargin': '',
       '--borderColor': props.ui?.borderColor || 'var(--color-primary)',
+      '--borderRadius': props.ui?.borderRadius || config.inputWrapper.borderRadius,
     }
 
     const preferMargin = !!props.preferMargin

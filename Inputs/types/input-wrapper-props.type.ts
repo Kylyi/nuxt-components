@@ -1,4 +1,4 @@
-import { type CSSProperties } from 'vue'
+import type { CSSProperties } from 'vue'
 
 // Types
 import type { IInputLabelProps } from '~/components/Inputs/types/input-label-props.type'
@@ -83,6 +83,11 @@ export type IInputWrapperProps = IInputLabelProps & {
     borderColor?: string
 
     /**
+     * The border radius of the input
+     */
+    borderRadius?: string
+
+    /**
      * The class of the input wrapper (including label,...)
      */
     contentClass?: ClassType
@@ -102,7 +107,7 @@ export type IInputWrapperProps = IInputLabelProps & {
     /**
      * Style of the input container
      *
-     * * Note: Primarily used for background color
+     * Note: Primarily used for background color
      */
     inputContainerStyle?: CSSProperties
   }
@@ -120,7 +125,7 @@ export type IInputWrapperProps = IInputLabelProps & {
   zod?:
     | string
     | {
-        key: string
-        options?: IZodValidationOptions
-      }
+      key: string
+      options?: IZodValidationOptions
+    }
 }

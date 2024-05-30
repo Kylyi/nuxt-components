@@ -45,7 +45,7 @@ defineExpose({
     if (editor.value) {
       resolveValues(editor.value.view)
     }
-  }
+  },
 })
 
 // Utils
@@ -144,18 +144,16 @@ const DropcursorExt = Dropcursor.configure()
 const mentionEl = ref<InstanceType<typeof WysiwygMention>>()
 const selectFnc = ref<Function>(() => {})
 const mentionItemsFiltered = ref<IWysiwygMentionItem[]>([])
-const getRectFnc = ref<() => ClientRectObject>(function () {
-  return {
-    bottom: 0,
-    height: 0,
-    left: 0,
-    right: 0,
-    top: 0,
-    width: 0,
-    x: 0,
-    y: 0,
-  }
-})
+const getRectFnc = ref<() => ClientRectObject>(() => ({
+  bottom: 0,
+  height: 0,
+  left: 0,
+  right: 0,
+  top: 0,
+  width: 0,
+  x: 0,
+  y: 0,
+}))
 
 const MentionExt = Mention.configure({
   renderLabel: ({ node, options }) => {
@@ -171,7 +169,7 @@ const MentionExt = Mention.configure({
       mentionItemsFiltered.value = (toValue(mentionItems) || []).filter(
         item => {
           return item.label.toLowerCase().startsWith(query.toLowerCase())
-        }
+        },
       )
 
       return []
@@ -247,7 +245,6 @@ function removeElement(el: HTMLElement | null) {
   el?.remove()
 }
 
-
 const isSinkVisible = computed(() => {
   const isEditable = !props.readonly && !props.disabled
 
@@ -256,12 +253,13 @@ const isSinkVisible = computed(() => {
     && !props.noSink
 })
 
-const filesById = computed(() => {
+// Uploaded files that the Wysiwyg must have access to, by their path
+const filesByPath = computed(() => {
   return props.files?.reduce((agg, file) => {
     agg[file.path] = file
 
     return agg
-  }, {} as Record<IFile['path'], IFile>)
+  }, {} as Record<IFile['path'], Pick<IFile, 'id' | 'path' | 'name'>>)
 })
 
 function syncFilesHTML() {
@@ -281,7 +279,7 @@ function syncFilesHTML() {
     node.setAttribute(
       'files',
       providedData[node.getAttribute('uuid') ?? ''].files
-        ?.map((file: FileModel) => file.uploadedFile?.filepath).join('__|__')
+        ?.map((file: FileModel) => file.uploadedFile?.filepath).join('__|__'),
     )
   })
 
@@ -290,7 +288,7 @@ function syncFilesHTML() {
 }
 
 provide(editorKey, editor)
-provide(filesByFilepathKey, filesById)
+provide(filesByFilepathKey, filesByPath)
 provide('removeElement', removeElement)
 provide('syncFilesHTML', syncFilesHTML)
 
@@ -313,7 +311,7 @@ watch(
   () => props.readonly,
   isReadonly => {
     editor.value?.setEditable(!isReadonly)
-  }
+  },
 )
 
 onMounted(() => {
@@ -408,10 +406,11 @@ onMounted(() => {
   p.is-empty:first-child::before {
     content: attr(data-placeholder);
 
-    --apply: color-gray-500 dark:color-gray-400 float-left h-0 pointer-events-none;
+    --apply: color-gray-500 dark: color-gray-400 float-left h-0
+      pointer-events-none;
   }
 
-  [data-type="mention"] {
+  [data-type='mention'] {
     --apply: italic;
   }
 }

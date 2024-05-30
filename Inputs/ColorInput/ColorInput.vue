@@ -84,6 +84,7 @@ const fieldProps = getFieldProps(props)
     >
       <ColorBrandingPicker
         v-model="model"
+        :rgba="rgba"
         @update:model-value="handlePickColor"
       />
     </MenuProxy>

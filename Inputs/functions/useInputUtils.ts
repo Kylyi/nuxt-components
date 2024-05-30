@@ -42,6 +42,7 @@ export function useInputUtils(options: IInputUtilsOptions) {
     onAccept: ev => {
       nextTick(() => {
         maskEventHandlers?.onAccept?.(lastValidValue.value, ev)
+        syncTypedWithModel()
       })
     },
     onComplete: ev => {
@@ -254,35 +255,31 @@ export function useInputUtils(options: IInputUtilsOptions) {
     }
   }, 300)
 
+  function syncTypedWithModel() {
+    if (!isInitialized.value) {
+      return
+    }
+
+    const value = isEmpty.value ? props.emptyValue : typed.value
+
+    // We only emit the value when the mask is complete
+    // or if we allow incomplete mask values
+    // or if we removed the value (ie. isEmpty === true)
+    const isComplete = mask.value?.masked.isComplete
+
+    if (isComplete || props.allowIncompleteMaskValue || isEmpty.value) {
+      lastValidValue.value = value
+      debouncedChange(value)
+    }
+
+    model.value = value
+  }
+
   // We sync the `model` with the `typed` value from iMask
-  syncRef(model, typed, {
-    direction: 'both',
-    transform: {
-      rtl: val => {
-        if (!isInitialized.value) {
-          return model.value
-        }
-
-        const value = isEmpty.value ? props.emptyValue : val
-
-        // We only emit the value when the mask is complete
-        // or if we allow incomplete mask values
-        // or if we removed the value (ie. isEmpty === true)
-        const isComplete = mask.value?.masked.isComplete
-
-        if (isComplete || props.allowIncompleteMaskValue || isEmpty.value) {
-          lastValidValue.value = value
-          debouncedChange(value)
-        }
-
-        return value
-      },
-      ltr: val => {
-        return isNil(val) ? '' : val
-      },
-    },
-    flush: 'post',
-    immediate: false,
+  watch(model, val => {
+    if (val !== typed.value) {
+      typed.value = val
+    }
   })
 
   // We also need to sync the `model` when the `originalModel` changes

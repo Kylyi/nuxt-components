@@ -229,6 +229,8 @@ export const config = merge(
         layout: 'regular',
         stackLabel: true,
       } as IInputWrapperProps,
+
+      borderRadius: '0.5rem',
     },
 
     // Input - Number input
@@ -453,7 +455,7 @@ export const config = merge(
         options?: {
           externalDataRef?: Ref<IItem>
           metaRef?: MaybeRefOrGetter<IItem>
-        }
+        },
       ) => {
         return {}
       },
@@ -588,5 +590,5 @@ export const config = merge(
       >
     },
   },
-  appConfig
+  appConfig,
 )

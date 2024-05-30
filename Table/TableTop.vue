@@ -415,7 +415,8 @@ onKeyStroke(['d', 'D'], (ev: KeyboardEvent) => {
 
             <Component
               :is="config.subscriptionComponent"
-              self-center
+              self-start
+              m="t-1"
             />
           </template>
 

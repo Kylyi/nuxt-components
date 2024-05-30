@@ -195,6 +195,8 @@ const isModified = computed(() => {
 
   .link {
     --apply: decoration-none font-size-$MiniCard-value-font-size text-sm;
+    overflow-wrap: break-word;
+    white-space: pre-line;
     font-weight: var(--MiniCard-value-font-weight);
 
     &__label {

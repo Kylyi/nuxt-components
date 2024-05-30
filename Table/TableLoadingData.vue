@@ -17,7 +17,7 @@ const hasRows = computed(() => props.rows && props.rows?.length > 0)
     <div
       class="flex flex-center"
       relative
-      min-w="70"
+      min-w="30"
       backdrop="blur-sm"
     >
       <LoaderInline

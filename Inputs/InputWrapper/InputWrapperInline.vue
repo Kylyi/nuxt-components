@@ -74,7 +74,7 @@ const classes = computed(() => {
 
 <style lang="scss" scoped>
 .input-wrapper__inline {
-  --apply: flex flex-col rounded-custom;
+  --apply: flex flex-col rounded-$borderRadius;
 
   &-label {
     --apply: shrink-0;
@@ -155,7 +155,7 @@ const classes = computed(() => {
   grid-row: 1 / 2;
   transition: border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
-  --apply: border-custom rounded-custom pointer-events-none border-ca fit
+  --apply: border-custom rounded-$borderRadius pointer-events-none border-ca fit
     bg-$Input-wrapper-bg;
 }
 

@@ -74,7 +74,7 @@ defineExpose({
   scrollToTop: () => scrollTo(0),
   scrollTo,
   focus: () => virtualScrollEl.value?.focus(),
-  rerender: (noEmit?: boolean) => rerenderVisibleRows(noEmit),
+  rerender: (noEmit?: boolean) => rerenderVisibleRows({ triggerScrollEvent: !noEmit }),
   renderOnlyVisible,
   updateRowHeight,
 })
@@ -107,8 +107,10 @@ const isMounted = ref(false)
 const isVirtual = ref(false)
 const rowHeight = toRef(props, 'rowHeight')
 const rowKey = toRef(props, 'rowKey') as Ref<keyof T>
-const virtualScrollerRect = ref<DOMRect>()
 const visibleItemsIdx = ref({ first: 0, last: 0 })
+
+const containerRect = useElementSize(containerEl)
+const virtualScrollerRect = useElementSize(virtualScrollEl)
 
 const overscan = computed(() => {
   return {
@@ -223,11 +225,10 @@ function handleScrollEvent(
   // Visible rows
   const firstVisibleIdx = heightsCumulated.value.findIndex(h => h >= scrollY)
   let lastVisibleIdx = heightsCumulated.value.findIndex(
-    h => h >= scrollY + (virtualScrollerRect.value?.height || 0)
+    h => h >= scrollY + (virtualScrollerRect.height.value)
   )
 
-  lastVisibleIdx =
-    lastVisibleIdx === -1 ? rows.value?.length - 1 : lastVisibleIdx
+  lastVisibleIdx = lastVisibleIdx === -1 ? rows.value?.length - 1 : lastVisibleIdx
 
   const firstVisibleItem = props.rows![firstVisibleIdx]
   const lastVisibleItem = props.rows![lastVisibleIdx]
@@ -330,7 +331,12 @@ async function handleMountedRow(node: any, row: IRow) {
   })
 }
 
-function rerenderVisibleRows(noScrollEvent?: boolean) {
+function rerenderVisibleRows(payload?: {
+  triggerScrollEvent?: boolean
+  emitScrollEvent?: boolean
+}) {
+  const { triggerScrollEvent = true, emitScrollEvent } = payload ?? {}
+
   const renderedRowsByIdx = renderedRows.value.rows.reduce((agg, row) => {
     agg[row.idx] = row
     return agg
@@ -343,8 +349,8 @@ function rerenderVisibleRows(noScrollEvent?: boolean) {
     handleMountedRow(el, row)
   })
 
-  if (!noScrollEvent) {
-    handleScrollEvent(lastScrollEvent.value, { noEmit: true, force: true })
+  if (triggerScrollEvent) {
+    handleScrollEvent(lastScrollEvent.value, { noEmit: !emitScrollEvent, force: true })
   }
 }
 
@@ -352,8 +358,8 @@ watchThrottled(
   width,
   () => {
     pauseRowHeightWatcher()
-    rerenderVisibleRows()
-    virtualScrollerRect.value = virtualScrollEl.value?.getBoundingClientRect()
+    rerenderVisibleRows({ triggerScrollEvent: true, emitScrollEvent: false })
+    // virtualScrollerRect.value = virtualScrollEl.value?.getBoundingClientRect()
 
     nextTick(resumeRowHeightWatcher)
   },
@@ -380,7 +386,7 @@ watch(rows, (rows, rowsOld) => {
     heights.value = [...heights.value, ...newHeights]
 
     nextTick(() => {
-      rerenderVisibleRows()
+      rerenderVisibleRows({ triggerScrollEvent: true, emitScrollEvent: false })
     })
   }
 
@@ -394,7 +400,7 @@ watch(rows, (rows, rowsOld) => {
     renderedRows.value = getRenderedRows(0, INITIAL_ROWS_RENDER_COUNT)
 
     nextTick(() => {
-      rerenderVisibleRows()
+      rerenderVisibleRows({ triggerScrollEvent: true, emitScrollEvent: false })
     })
   }
 
@@ -403,30 +409,48 @@ watch(rows, (rows, rowsOld) => {
   })
 })
 
+// We check for the same height of the `content` and `scroller`
+// If they are the same, it means we loaded the full content but it doesn't overflow
+// If that happens, we can assume either
+// * We loaded all the data
+// * The data is not enough to overflow the container, so we need to force the scroll event to possibly load more data
+watch([containerRect.height, virtualScrollerRect.height], async (heights) => {
+  const isZero = heights.some(h => h === 0)
+  const isSameHeight = heights[0] === heights[1]
+
+  if (isSameHeight && !isZero) {
+    nextTick(() => {
+      handleScrollEvent(lastScrollEvent.value, { noEmit: false, force: true })
+    })
+  }
+})
+
 // Height watcher
 const hasJustRerendered = ref(false)
 
-const { pause: pauseRowHeightWatcher, resume: resumeRowHeightWatcher } =
-  watchPausable(
-    () => renderedRows.value.rows,
-    () => {
-      if (hasJustRerendered.value) {
-        hasJustRerendered.value = false
+const {
+  pause: pauseRowHeightWatcher,
+  resume: resumeRowHeightWatcher
+} = watchPausable(
+  () => renderedRows.value.rows,
+  () => {
+    if (hasJustRerendered.value) {
+      hasJustRerendered.value = false
 
-        return
-      }
+      return
+    }
 
-      pauseRowHeightWatcher()
+    pauseRowHeightWatcher()
 
-      nextTick(() => {
-        rerenderVisibleRows(true)
-        resumeRowHeightWatcher()
-      })
+    nextTick(() => {
+      rerenderVisibleRows({ triggerScrollEvent: false })
+      resumeRowHeightWatcher()
+    })
 
-      hasJustRerendered.value = true
-    },
-    { deep: true }
-  )
+    hasJustRerendered.value = true
+  },
+  { deep: true }
+)
 
 pauseRowHeightWatcher()
 
@@ -434,7 +458,7 @@ pauseRowHeightWatcher()
 onMounted(() => {
   nextTick(() => {
     isMounted.value = true
-    virtualScrollerRect.value = virtualScrollEl.value?.getBoundingClientRect()
+    // virtualScrollerRect.value = virtualScrollEl.value?.getBoundingClientRect()
   })
   setTimeout(resumeRowHeightWatcher, 0)
 })
@@ -455,7 +479,7 @@ function renderOnlyVisible(
 
   if (rowHeight) {
     const rowsInViewport = Math.ceil(
-      (virtualScrollerRect.value?.height || 0) / (rowHeight || props.rowHeight)
+      (virtualScrollerRect.height.value) / (rowHeight || props.rowHeight)
     )
 
     _last = _first + rowsInViewport

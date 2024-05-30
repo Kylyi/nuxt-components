@@ -203,6 +203,12 @@ export interface ITableProps {
   paginationOptions?: {
     pageSize?: number
     page?: number
+
+    /**
+     * When scrolling to the bottom of the table, this amount of rows
+     * will trigger the `loadMore` event
+     */
+    rowsCountTrigger?: number
   }
 
   /**
@@ -361,7 +367,7 @@ export interface ITableProps {
     /**
      * Whether the table rows have the selection disabled
      */
-    disabled?: boolean
+    disabled?: boolean | ((row: any) => boolean)
   }
 
   /**

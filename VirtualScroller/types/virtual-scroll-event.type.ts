@@ -5,6 +5,6 @@ type VirtualItem = {
 }
 
 export type IVirtualScrollEvent = {
-  visibleStartItem: Pick<VirtualItem, 'index' | 'key' | 'size'>
-  visibleEndItem: Pick<VirtualItem, 'index' | 'key' | 'size'>
+  visibleStartItem: VirtualItem
+  visibleEndItem: VirtualItem
 }
