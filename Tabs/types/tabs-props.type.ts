@@ -1,3 +1,5 @@
+import type { IBtnProps } from "~/components/Button/types/btn-props.type"
+
 export interface ITabsProps {
   contentClass?: ClassType
   labelActiveClass?: ClassType
@@ -6,6 +8,7 @@ export interface ITabsProps {
   navClass?: ClassType
   noNav?: boolean
   noAnimation?: boolean
+  tabBtnProps?: IBtnProps
 
   /**
    * The classes for the HorizontalScroller inside Tabs
