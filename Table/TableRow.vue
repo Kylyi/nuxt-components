@@ -98,7 +98,7 @@ const isEditable = computedEager(() => {
 
 .tr:hover {
   .cell {
-    --apply: bg-blue-500/10;
+    --apply: bg-$Table-row-hover-bg;
   }
 }
 </style>
