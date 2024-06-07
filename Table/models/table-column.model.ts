@@ -324,6 +324,7 @@ export class TableColumn<T = IItem> implements IItemBase<T> {
       case 'date':
       case 'timestamp':
       case 'duration':
+      case 'stringEnum':
       case 'custom':
         this.comparator = defaultComparator ?? ComparatorEnum.EQUAL
 
@@ -517,8 +518,8 @@ export class TableColumn<T = IItem> implements IItemBase<T> {
     // Filtering
     this.filters = col.filters ? col.filters : []
     this.filterComponent = col.filterComponent
-    this.comparators = col.comparators
-    this.comparator = col.comparator || this.comparator
+    this.comparators = col.comparators ?? config.dataTypes.comparators[this.dataType]
+    this.comparator = col.comparator ?? config.dataTypes.defaultComparator[this.dataType] ?? this.comparator
     this.extraComparators = col.extraComparators
     this.noFilterSort = col.noFilterSort ?? false
     this.filterFormat = col.filterFormat

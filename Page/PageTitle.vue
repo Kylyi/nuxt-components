@@ -63,7 +63,7 @@ const hasContent = computed(() => {
   }
 
   &__text {
-    --apply: grow font-700 m-b-0;
+    --apply: grow font-$PageTitle-weight m-b-0;
   }
 }
 
