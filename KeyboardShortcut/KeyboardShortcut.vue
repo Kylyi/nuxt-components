@@ -2,15 +2,10 @@
 // Store
 import { useAppStore } from '~/libs/App/app.store'
 
-type IProps = {
-  icon?: string
-  char?: string
-  withCtrl?: boolean
-  withAlt?: boolean
-  withShift?: boolean
-}
+// Types
+import type { IKeyboardShortcutProps } from '~/components/KeyboardShortcut/types/keyboard-shortcut-props.type'
 
-const props = defineProps<IProps>()
+const props = defineProps<IKeyboardShortcutProps>()
 
 // Utils
 const appStore = useAppStore()
