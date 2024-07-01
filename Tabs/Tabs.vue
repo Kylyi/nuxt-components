@@ -8,12 +8,18 @@ import { config } from '~/components/config/components-config'
 // Types
 import type { ITabsProps } from '~/components/Tabs/types/tabs-props.type'
 
+// Utils
+import { useTabsUtils } from '~/components/Tabs/functions/useTabsUtils'
+
 const props = withDefaults(defineProps<ITabsProps>(), {
   noAnimation: config.tabs.props.noAnimation,
 })
 const emits = defineEmits<{
   (e: 'update:modelValue', id: string | number): void
 }>()
+
+// Utils
+const { createTab } = useTabsUtils()
 
 // Layout
 const keepAliveTabs = ref<string[]>([])
@@ -50,28 +56,21 @@ const tabs = computed(() => {
       t =>
         typeof t.type === 'object' && (t.type as any).name?.startsWith('Tab_')
     )
-    .map((t: VNode) => {
-      return {
-        id: t.props!.name,
-        label: t.props!.label || t.props!.name,
-        icon: t.props!.icon,
-        size: t.props!.size,
-        component: t,
-        componentName: (t.type as any).name,
-      }
+    .map((t: VNode, index) => {
+      return createTab(t, index)
     })
 })
 
 const activeTab = computed(() => {
-  return tabs.value.find(tab => tab.id === props.modelValue)
+  return tabs.value.find(tab => tab.props?.id === props.modelValue)
 })
 
 watch(
   tabs,
   tabs => {
     keepAliveTabs.value = tabs
-      .filter(tab => !isNil(tab.component.props?.['keep-alive']))
-      .map(tab => tab.componentName)
+      .filter(tab => !isNil(tab.props?.['keep-alive']))
+      .map(tab => tab.props?.componentName)
   },
   { immediate: true }
 )
@@ -82,8 +81,10 @@ const transitionEnter = ref('')
 const transitionLeave = ref('')
 
 function handleTabChange(id: string | number) {
-  const currentIdx = tabs.value.findIndex(tab => tab.id === oldModel.value)
-  const selectedTabIdx = tabs.value.findIndex(tab => tab.id === id)
+  const currentIdx = tabs.value.findIndex(
+    tab => tab?.props?.id === oldModel.value
+  )
+  const selectedTabIdx = tabs.value.findIndex(tab => tab?.props?.id === id)
 
   if (currentIdx < selectedTabIdx) {
     transitionEnter.value = props.transitionNext || 'animate-fade-in-right'
@@ -121,24 +122,26 @@ watch(model, model => {
     >
       <slot
         v-for="tab in tabs"
-        :key="tab.id"
-        :name="`${tab.id}-label`"
+        :key="tab?.props?.id"
+        :name="`${tab?.props?.id}-label`"
         :tab="tab"
-        :change-fn="(id?: number | string) => handleTabChange(id ?? tab.id)"
+        :change-fn="(id?: number | string) => handleTabChange(id ?? tab?.props?.id)"
       >
         <Btn
-          v-if="!invisibleTabs?.includes(tab.id)"
-          :label="tab.label"
-          :icon="tab.icon"
+          v-if="!invisibleTabs?.includes(tab?.props?.id)"
+          :label="tab?.props?.label"
+          :icon="tab?.props?.icon"
           no-uppercase
           class="tab-label"
-          :size="tab.size || 'lg'"
+          :size="tab?.props?.size || 'lg'"
           :class="[
             labelClass,
-            ...(tab.id === activeTab?.id ? [labelActiveClass] : []),
-            { 'is-active': tab.id === activeTab?.id },
+            ...(tab?.props?.id === activeTab?.props?.id
+              ? [labelActiveClass]
+              : []),
+            { 'is-active': tab?.props?.id === activeTab?.props?.id },
           ]"
-          @click="handleTabChange(tab.id)"
+          @click="handleTabChange(tab?.props?.id)"
         />
       </slot>
     </HorizontalScroller>
@@ -160,8 +163,8 @@ watch(model, model => {
       >
         <KeepAlive :include="keepAliveTabs">
           <Component
-            :is="activeTab.component"
-            :key="activeTab.id"
+            :is="activeTab"
+            :key="activeTab.props?.id"
           />
         </KeepAlive>
 
